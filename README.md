@@ -8,11 +8,11 @@ O repositório está com testes para a extração de caracteres de placas de ve�
 
 ## Arquitetura do repositório
 
-|--------------- db ------------- banco.py (Funções para o uso do Banco de Dados, criar um Banco, Criar tabela, Inserir dados, commitar, etc);
-|----------- gray-mages --------- Diretório onde ficaram as imagens tratadas (geradas automáticamente após a execução do script);
-|--------------- obj ------------ Diretório onde ficam as imagens e seus respectivos txts;
-|-------------- plates ---------- Diretório onde ficaram as imagens das placas tratadas (geradas automáticamente após a execução do script);
-|------- script-process.py------- Script onde faz todo o processo: trata a imagem, passa pelo tesseract e armazena no db.
+|--------------- db ------------- banco.py (Funções para o uso do Banco de Dados, criar um Banco, Criar tabela, Inserir dados, commitar, etc); <br></br>
+|----------- gray-mages --------- Diretório onde ficaram as imagens tratadas (geradas automáticamente após a execução do script); <br></br>
+|--------------- obj ------------ Diretório onde ficam as imagens e seus respectivos txts; <br></br>
+|-------------- plates ---------- Diretório onde ficaram as imagens das placas tratadas (geradas automáticamente após a execução do script); <br></br>
+|------- script-process.py------- Script onde faz todo o processo: trata a imagem, passa pelo tesseract e armazena no db. <br></br>
 
 ## Executar o projeto
 python .\image-process\script-process.py
