@@ -1,31 +1,35 @@
 import sqlite3
 
-
 def convertToBinaryData(filename):
     with open(filename, 'rb') as file:
         blobData = file.read()
     return blobData
 
-def create_db():
-    banco = sqlite3.connect('db/banco_pardal.db')
-    return banco.cursor()
+def create_db(path):
+    return sqlite3.connect(path)
+
 
 
 def create_table(cursor):
-    cursor.execute( "CREATE TABLE CARROS( imagem blob, coordenadas integer, imagemCinza blob, placa text)")
+    cursor.execute( "CREATE TABLE PLACAS( imagem blob, coordenadas text, imagemCinza blob, placa text)")
 
-def insert_db(original_image, coordinates, gray_image, placa, file, cursor, banco):
-    sqlite_insert_blob_query = """ INSERT INTO CARROS
+def insert_db(coordinates, placa, original_file, gray_file, cursor):
+
+    sqlite_insert_blob_query = """ INSERT INTO PLACAS
                                 (imagem, coordenadas, imagemCinza, placa) VALUES (?, ?, ?, ?)"""
 
-    original_image = convertToBinaryData(f'{file}.jpg')
-    gray_image = convertToBinaryData(f'{file}.jpg')
+    original_image = convertToBinaryData(original_file)
+    gray_image = convertToBinaryData(gray_file)
     data_tuple = (original_image, coordinates, gray_image, placa)
 
     cursor.execute(sqlite_insert_blob_query, data_tuple)
 
+def commit_db(banco):
     banco.commit()
 
 def consulta_db(cursor):
-    cursor.execute("SELECT * FROM CARROS")
+    cursor.execute("SELECT coordenadas, placa FROM PLACAS")
     print(cursor.fetchall())
+
+def close_db(banco):
+    banco.close()

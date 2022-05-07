@@ -1,12 +1,12 @@
-import string
 from PIL import Image
+from db.banco import *
 
 import os
 import cv2
 import pytesseract
 import PIL.Image
 
-path:string =  "image-process\obj"
+path =  "image-process\obj"
 os.chdir(path)
 
 def convert_image(file):
@@ -20,7 +20,9 @@ def get_coordenates(img):
     fl = open(f'{file}.txt', 'r')
     data = fl.readlines()
     fl.close() 
+    return data
 
+def extract_box(data):
     for dt in data:
         class_id, x_center, y_center, w, h = map(float, dt.split(' '))
         x_center, y_center, w, h = float(x_center), float(y_center), float(w), float(h)
@@ -37,20 +39,29 @@ def tesseract(file):
     return pytesseract.image_to_string(PIL.Image.open(f"../plates/{file}.jpg"), config ='--oem 3 --psm 6')
 
 if __name__ == '__main__':
+    
+    banco = create_db('../db/pardal.db')
+    cursor = banco.cursor()
+    create_table(cursor)
+
     img = ""
 
     try:
         for file in os.listdir():
             if file.endswith(".txt"):
-        
                 file = file.split(".")[0]
                 img = convert_image(file)
                 dh, dw, _ = img.shape
-                print(tesseract(file))
-
-                imgCrop = get_coordenates(img)
+                coordinates = get_coordenates(img)
+                imgCrop = extract_box(coordinates)
                 cv2.imwrite(f"../plates/{file}.jpg", imgCrop)
+
+                insert_db(" ".join(coordinates).strip('\n'), tesseract(file).strip('\n'), f'{file}.jpg', f'../gray-images/{file}_gray.jpg', cursor)
     except:
         pass
+    commit_db(banco)
+    consulta_db(cursor)
+    close_db(banco)
+
 
 
